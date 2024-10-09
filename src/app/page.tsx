@@ -14,7 +14,7 @@ const HomePage: FC = () => {
   const [emojis, setEmojis] = useState<Emojis[]>([]);
   const [currentEmoji, setCurrentEmoji] = useState<string>("&#129402;");
   const [currentCaption, setCurrentCaption] = useState<string>(
-    "You&apos;re sad and you know it. just give up, don&apos;t try."
+    "You're sad and you know it. just give up, don't try."
   );
 
   const shuffleEmojis = () => {
@@ -54,12 +54,23 @@ const HomePage: FC = () => {
     };
 
     fetchEmojis();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(`${currentEmoji} ${currentCaption}`);
+      alert("Emoji and caption are copied to clipboard!");
+    } catch (error) {
+      alert("Failed to copy!");
+      console.error(error);
+    }
+  };
 
   return (
     <section className="flex flex-col bg-[#FAF4E1] h-screen min-w-[375px] max-w-[430px] p-[24px]">
       <Image
-        className="mb-[18px]"
+        className="mb-[18px] object-cover"
         src="/images/emojilogy-logo.svg"
         alt="Emojilogy logo"
         width={100}
@@ -83,9 +94,11 @@ const HomePage: FC = () => {
         </div>
 
         <span
-          className="text-[#4A7582] text-[16px] w-[180px] text-center italic"
-          dangerouslySetInnerHTML={{ __html: currentCaption }}
-        />
+          onClick={copyToClipboard}
+          className="text-[#4A7582] text-[16px] w-[180px] text-center italic cursor-pointer"
+        >
+          {currentCaption}
+        </span>
       </div>
     </section>
   );
